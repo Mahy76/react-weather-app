@@ -26,45 +26,6 @@ export default function Search() {
       });
   }
 
-  function renderWeatherData() {
-    if (temp && temp.weather) {
-      return (
-        <div className="overview">
-          <h1>{city}</h1>
-          <div className="container">
-            <div className="row">
-              <div className="col-6">
-                <div className="d-flex">{temp.main?.temp}</div>
-              </div>
-              <div className="col-6">
-                <div className="d-flex temp-image weather-temperature">
-                  {temp.weather[0] && (
-                    <img
-                      src={`http://openweathermap.org/img/wn/${temp.weather[0].icon}.png`}
-                      alt="Weather Icon"
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-          <ul className="mt-3">
-            <li>Last updated: {new Date().toLocaleString()}</li>
-            <li>
-              <strong>Description: {temp.weather[0]?.description}</strong>
-            </li>
-          </ul>
-          <ul>
-            <li>Humidity: {temp.main?.humidity}%</li>
-            <li>Wind: {temp.wind?.speed}</li>
-          </ul>
-        </div>
-      );
-    } else {
-      return <div className="no-data">No data available</div>;
-    }
-  }
-
   return (
     <div className="container">
       <div className="kinky-weather-wrapper">
@@ -94,7 +55,38 @@ export default function Search() {
                 </div>
               </div>
             </form>
-            {renderWeatherData()}
+            <div className="overview">
+              <h1>{city}</h1>
+              <div className="container">
+                <div className="row">
+                  <div className="col-6">
+                    <div>
+                      <h2>{Math.round(temp.main.temp)}</h2>°C
+                    </div>
+                  </div>
+                  <div className="col-6">
+                    <div className="d-flex  weather-temperature">
+                      {temp.weather[0] && (
+                        <img
+                          src={`http://openweathermap.org/img/wn/${temp.weather[0].icon}.png`}
+                          alt="Weather Icon"
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ul className="mt-3">
+                <li>Last updated: {new Date().toLocaleString()}</li>
+                <li>
+                  <strong>Description: {temp.weather[0].description}</strong>
+                </li>
+              </ul>
+              <ul>
+                <li>Humidity: {temp.main.humidity}%</li>
+                <li>Wind: {temp.wind?.speed}</li>
+              </ul>
+            </div>
           </div>
         </div>
         <small>
@@ -104,7 +96,7 @@ export default function Search() {
             rel="noopener noreferrer"
           >
             Open-source code
-          </a>{" "}
+          </a>
           by Mahsa Nosrati
         </small>
       </div>
