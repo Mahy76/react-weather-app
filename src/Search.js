@@ -17,6 +17,7 @@ export default function Search() {
 
     axios.get(url).then(function (response) {
       setTemp(response.data);
+      console.log(response.data);
     });
   }
 
@@ -24,32 +25,6 @@ export default function Search() {
     <div className="container">
       <div className="kinky-weather-wrapper">
         <div className="kinky-weather">
-          {temp && temp.weather && (
-            <div className="overview">
-              <h1>{temp.name}</h1>
-              <ul>
-                <li>Last updated: {new Date().toLocaleString()}</li>
-                <li>{temp.weather[0].description}</li>
-              </ul>
-            </div>
-          )}
-
-          <div className="row">
-            <div className="col-6">
-              {temp && temp.weather && (
-                <div className="d-flex temp-image weather-temperature">
-                  <img
-                    src={`http://openweathermap.org/img/wn/${temp.weather[0].icon}.png`}
-                    alt="Weather Icon"
-                  />
-                  <div className="d-flex">
-                    <strong>{Math.round(temp.main.temp)}°C</strong>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
           <div className="search">
             <form className="mb-3" onSubmit={showTemp}>
               <div className="row">
@@ -67,33 +42,56 @@ export default function Search() {
                   <button
                     type="submit"
                     value="search"
-                    className="btn btn-primary w-100"
+                    className="btn btn-info w-100"
                   >
                     Search
                   </button>
                 </div>
               </div>
             </form>
-
             {temp && temp.weather && (
-              <ul>
-                <li>Humidity: {temp.main.humidity}%</li>
-                <li>Wind: {temp.wind.speed}</li>
-              </ul>
+              <div className="overview">
+                <h1>{city}</h1>
+                <div className="container">
+                  <div className="row">
+                    <div className="col-6">
+                      <div>{temp.main.temp}°C</div>
+                    </div>
+                    <div className="col-6">
+                      <div className="d-flex temp-image weather-temperature">
+                        <img
+                          src={`http://openweathermap.org/img/wn/${temp.weather[0].icon}.png`}
+                          alt="Weather Icon"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <ul className="mt-3">
+                  <li>Last updated: {new Date().toLocaleString()}</li>
+                  <li>
+                    <strong>Description: {temp.weather[0].description}</strong>
+                  </li>
+                </ul>
+              </div>
             )}
 
-            <small>
-              <a
-                href="https://github.com/Mahy76/kinky-weather"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Open-source code
-              </a>{" "}
-              by Mahsa Nosrati
-            </small>
+            <ul>
+              <li>Humidity: {temp.main.humidity}%</li>
+              <li>Wind: {temp.wind.speed}</li>
+            </ul>
           </div>
         </div>
+        <small>
+          <a
+            href="https://github.com/Mahy76/kinky-weather"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Open-source code
+          </a>
+          by Mahsa Nosrati
+        </small>
       </div>
     </div>
   );
