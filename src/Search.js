@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+
 import axios from "axios";
+import "./Search.css";
 export default function Search() {
   let [city, setCity] = useState("");
   let [temp, setTemp] = useState("");
@@ -44,3 +46,31 @@ export default function Search() {
     </div>
   );
 }
+
+
+
+
+<div className="Search">
+      <form className="mb-3" onSubmit={handleSubmit}>
+        <div className="row">
+          <div className="col-9">
+            <input
+              type="search"
+              placeholder="Type a city..."
+              className="form-control"
+              autoComplete="off"
+              value={city}
+              onChange={(event) => setCity(event.target.value)}
+            />
+          </div>
+          <div className="col-3">
+            <input
+              type="submit"
+              value="search"
+              className="btn btn-primary w-100"
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+  );
