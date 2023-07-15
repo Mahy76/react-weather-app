@@ -7,18 +7,62 @@ export default function Search() {
   const [city, setCity] = useState("");
   const [temp, setTemp] = useState(null);
 
-  function getCity(event) {
+  function handleInputChange(event) {
     setCity(event.target.value);
   }
 
-  function showTemp(event) {
+  function handleFormSubmit(event) {
     event.preventDefault();
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=3a94f3778290bfeee61278505dbbe51d&units=metric`;
 
-    axios.get(url).then(function (response) {
-      setTemp(response.data);
-      console.log(response.data);
-    });
+    axios
+      .get(url)
+      .then(function (response) {
+        setTemp(response.data);
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.error("Error fetching weather data:", error);
+      });
+  }
+
+  function renderWeatherData() {
+    if (temp && temp.weather) {
+      return (
+        <div className="overview">
+          <h1>{city}</h1>
+          <div className="container">
+            <div className="row">
+              <div className="col-6">
+                <div className="d-flex">{temp.main?.temp}</div>
+              </div>
+              <div className="col-6">
+                <div className="d-flex temp-image weather-temperature">
+                  {temp.weather[0] && (
+                    <img
+                      src={`http://openweathermap.org/img/wn/${temp.weather[0].icon}.png`}
+                      alt="Weather Icon"
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+          <ul className="mt-3">
+            <li>Last updated: {new Date().toLocaleString()}</li>
+            <li>
+              <strong>Description: {temp.weather[0]?.description}</strong>
+            </li>
+          </ul>
+          <ul>
+            <li>Humidity: {temp.main?.humidity}%</li>
+            <li>Wind: {temp.wind?.speed}</li>
+          </ul>
+        </div>
+      );
+    } else {
+      return <div className="no-data">No data available</div>;
+    }
   }
 
   return (
@@ -26,7 +70,7 @@ export default function Search() {
       <div className="kinky-weather-wrapper">
         <div className="kinky-weather">
           <div className="search">
-            <form className="mb-3" onSubmit={showTemp}>
+            <form className="mb-3" onSubmit={handleFormSubmit}>
               <div className="row">
                 <div className="col-9">
                   <input
@@ -35,7 +79,8 @@ export default function Search() {
                     placeholder="Type a city..."
                     className="form-control"
                     autoComplete="off"
-                    onChange={getCity}
+                    value={city}
+                    onChange={handleInputChange}
                   />
                 </div>
                 <div className="col-3">
@@ -49,37 +94,7 @@ export default function Search() {
                 </div>
               </div>
             </form>
-            {temp && temp.weather && (
-              <div className="overview">
-                <h1>{city}</h1>
-                <div className="container">
-                  <div className="row">
-                    <div className="col-6">
-                      <div>{temp.main.temp}°C</div>
-                    </div>
-                    <div className="col-6">
-                      <div className="d-flex temp-image weather-temperature">
-                        <img
-                          src={`http://openweathermap.org/img/wn/${temp.weather[0].icon}.png`}
-                          alt="Weather Icon"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <ul className="mt-3">
-                  <li>Last updated: {new Date().toLocaleString()}</li>
-                  <li>
-                    <strong>Description: {temp.weather[0].description}</strong>
-                  </li>
-                </ul>
-              </div>
-            )}
-
-            <ul>
-              <li>Humidity: {temp.main.humidity}%</li>
-              <li>Wind: {temp.wind.speed}</li>
-            </ul>
+            {renderWeatherData()}
           </div>
         </div>
         <small>
@@ -89,7 +104,7 @@ export default function Search() {
             rel="noopener noreferrer"
           >
             Open-source code
-          </a>
+          </a>{" "}
           by Mahsa Nosrati
         </small>
       </div>
