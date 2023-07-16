@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
+import WeatherIcon from "react-icons-weather";
 import "./Search.css";
 
 export default function Search() {
@@ -60,23 +61,28 @@ export default function Search() {
                 <h1>{city}</h1>
                 <div className="container">
                   <div className="row">
-                    <div className="col-6">
+                    <div className="col-3">
                       <div>
                         <h2>{Math.round(temp.main.temp)}</h2>°C
                       </div>
                     </div>
                     <div className="col-6">
-                      <div className="d-flex  weather-temperature">
+                      <div className="  weather-temperature">
                         {temp.weather[0] && (
-                          <img
-                            src={`http://openweathermap.org/img/wn/${temp.weather[0].icon}.png`}
-                            alt="Weather Icon"
-                          />
+                          <div>
+                            <WeatherIcon
+                              name="owm"
+                              iconId={temp.weather[0].id}
+                              flip="horizontal"
+                              rotate="90"
+                            />
+                          </div>
                         )}
                       </div>
                     </div>
                   </div>
                 </div>
+
                 <ul className="mt-3">
                   <li>Last updated: {new Date().toLocaleString()}</li>
                   <li>
@@ -93,13 +99,13 @@ export default function Search() {
         </div>
         <small>
           <a
-            href="https://github.com/Mahy76/kinky-weather"
+            href="https://github.com/Mahy76/react-weather-app"
             target="_blank"
             rel="noopener noreferrer"
           >
             Open-source code
           </a>
-          by Mahsa Nosrati
+          <span>by Mahsa Nosrati</span>
         </small>
       </div>
     </div>
