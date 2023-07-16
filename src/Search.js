@@ -55,38 +55,40 @@ export default function Search() {
                 </div>
               </div>
             </form>
-            <div className="overview">
-              <h1>{city}</h1>
-              <div className="container">
-                <div className="row">
-                  <div className="col-6">
-                    <div>
-                      <h2>{Math.round(temp.main.temp)}</h2>°C
+            {temp && (
+              <div className="overview">
+                <h1>{city}</h1>
+                <div className="container">
+                  <div className="row">
+                    <div className="col-6">
+                      <div>
+                        <h2>{Math.round(temp.main.temp)}</h2>°C
+                      </div>
                     </div>
-                  </div>
-                  <div className="col-6">
-                    <div className="d-flex  weather-temperature">
-                      {temp.weather[0] && (
-                        <img
-                          src={`http://openweathermap.org/img/wn/${temp.weather[0].icon}.png`}
-                          alt="Weather Icon"
-                        />
-                      )}
+                    <div className="col-6">
+                      <div className="d-flex  weather-temperature">
+                        {temp.weather[0] && (
+                          <img
+                            src={`http://openweathermap.org/img/wn/${temp.weather[0].icon}.png`}
+                            alt="Weather Icon"
+                          />
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
+                <ul className="mt-3">
+                  <li>Last updated: {new Date().toLocaleString()}</li>
+                  <li>
+                    <strong>Description: {temp.weather[0].description}</strong>
+                  </li>
+                </ul>
+                <ul>
+                  <li>Humidity: {temp.main.humidity}%</li>
+                  <li>Wind: {temp.wind?.speed}</li>
+                </ul>
               </div>
-              <ul className="mt-3">
-                <li>Last updated: {new Date().toLocaleString()}</li>
-                <li>
-                  <strong>Description: {temp.weather[0].description}</strong>
-                </li>
-              </ul>
-              <ul>
-                <li>Humidity: {temp.main.humidity}%</li>
-                <li>Wind: {temp.wind?.speed}</li>
-              </ul>
-            </div>
+            )}
           </div>
         </div>
         <small>
