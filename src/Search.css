@@ -44,8 +44,7 @@ li:first-letter {
 .overview {
   margin-bottom: 20px;
 }
-
-.weather-temperature img {
-  height: 120px;
-  width: 120px;
+.weather-icon {
+  color: white;
+  width: 200px;
 }

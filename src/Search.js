@@ -75,6 +75,7 @@ export default function Search() {
                               iconId={temp.weather[0].id}
                               flip="horizontal"
                               rotate="90"
+                              className="weather-icon"
                             />
                           </div>
                         )}
