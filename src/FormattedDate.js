@@ -13,7 +13,7 @@ export default function FormattedDate(props) {
   let day = days[props.date.getDay()];
   let hours = props.date.getHourse();
   let minutes = props.date.getMinutes();
-  if (mihoursnutes < 10) {
+  if (hours < 10) {
     hours = `0${hours}`;
   }
   if (minutes < 10) {
