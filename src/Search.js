@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
-import WeatherInfo from "./WeatherInfo";
+import WeatherInfo from "./Info";
 import "./Search.css";
 
 export default function Search(props) {
@@ -9,6 +9,7 @@ export default function Search(props) {
   const [weatherData, setWeatherData] = useState({ ready: false });
 
   function setTemp(response) {
+    console.log(response.data);
     setWeatherData({
       ready: true,
       data: new DataTransfer(response.data.dt * 1000),
@@ -17,7 +18,7 @@ export default function Search(props) {
       wind: response.data.wind.speed,
       city: response.data.name,
       description: response.data.weather[0].description,
-      iconUrl: response.data,
+      icon: response.data.weather[0].icon,
     });
   }
   function search() {
@@ -29,7 +30,6 @@ export default function Search(props) {
   function handleFormSubmit(event) {
     event.preventDefault();
     search();
-    //search a city
   }
   function handleInputChange(event) {
     setCity(event.target.value);
