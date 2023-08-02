@@ -6,47 +6,43 @@ import Weather from "./Weather";
 
 export default function WeatherForecast(props) {
   let [loaded, setLoaded] = useState(false);
-  let [forecast, setForecast] = useState(null);
+  let [forecast, setForecast] = useState([]);
 
   useEffect(() => {
     setLoaded(false);
   }, [props.coordinates]);
 
   function handleResponse(response) {
-    setForecast(response.data.daily);
+    setForecast(response.data.list);
     setLoaded(true);
   }
 
-  function load() {
-    let apiKey = "e41f2813890986f64c4235b2e59d0608";
-    let longitude = props.coordinates.lon;
-    let latitude = props.coordinates.lat;
-    let apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
+  useEffect(() => {
+    if (props.coordinates && !loaded) {
+      let apiKey = "e41f2813890986f64c4235b2e59d0608";
+      let longitude = props.coordinates.lon;
+      let latitude = props.coordinates.lat;
+      let apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
 
-    axios.get(apiUrl).then(handleResponse);
-  }
+      axios.get(apiUrl).then((response) => {
+        handleResponse(response);
+      });
+    }
+  }, [props.coordinates, loaded]);
 
-  if (loaded) {
-    return (
-      <div className="WeatherForecast">
-        <div className="row">
-          {forecast.map(function (dailyForecast, index) {
-            if (index < 5) {
-              return (
-                <div className="col" key={index}>
-                  <WeatherForecastDay data={dailyForecast} />
-                </div>
-              );
-            } else {
-              return null;
-            }
-          })}
-        </div>
-      </div>
-    );
-  } else {
-    load();
-
+  if (!loaded) {
     return null;
   }
+
+  return (
+    <div className="WeatherForecast">
+      <div className="row">
+        {forecast.slice(0, 5).map((dailyForecast, index) => (
+          <div className="col" key={index}>
+            <WeatherForecastDay data={dailyForecast} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
