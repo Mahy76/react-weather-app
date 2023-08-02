@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./WeatherForecast.css";
 import axios from "axios";
 import WeatherForecastDay from "./WeatherForecastDay";
+
 export default function WeatherForecast(props) {
   const [loaded, setLoaded] = useState(false);
   const [dailyForecast, setDailyForecast] = useState([]);
@@ -61,19 +62,19 @@ export default function WeatherForecast(props) {
     return groupedData;
   }
 
-  if (!loaded) {
-    return null;
-  }
-
   return (
     <div className="WeatherForecast">
-      <div className="row">
-        {Object.entries(dailyForecast).map(([date, data]) => (
-          <div className="col" key={date}>
-            <WeatherForecastDay data={data} />
-          </div>
-        ))}
-      </div>
+      {error && <div className="error-message">Error: {error}</div>}
+      {!loaded && !error && <div className="loading-message">Loading...</div>}
+      {loaded && !error && (
+        <div className="row">
+          {Object.entries(dailyForecast).map(([date, data]) => (
+            <div className="col" key={date}>
+              <WeatherForecastDay data={data} />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
