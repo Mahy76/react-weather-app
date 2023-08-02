@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import "./WeatherForecast.css";
 import axios from "axios";
 import WeatherForecastDay from "./WeatherForecastDay";
-import WeatherIcon from "./WeatherIcon";
-
 export default function WeatherForecast(props) {
   const [loaded, setLoaded] = useState(false);
   const [dailyForecast, setDailyForecast] = useState([]);
@@ -12,10 +10,8 @@ export default function WeatherForecast(props) {
   useEffect(() => {
     setLoaded(false);
     setError(null);
-  }, [props.coordinates]);
 
-  useEffect(() => {
-    if (props.coordinates && !loaded) {
+    if (props.coordinates) {
       const apiKey = "e41f2813890986f64c4235b2e59d0608"; // Replace with your API key
       const longitude = props.coordinates.lon;
       const latitude = props.coordinates.lat;
@@ -30,10 +26,14 @@ export default function WeatherForecast(props) {
           setLoaded(true);
         })
         .catch((error) => {
-          setError(error);
+          if (error.response && error.response.status === 404) {
+            setError("Please enter a valid city name");
+          } else {
+            setError("An error occurred while fetching data");
+          }
         });
     }
-  }, [props.coordinates, loaded]);
+  }, [props.coordinates]);
 
   function groupForecastByDay(forecastData) {
     const groupedData = {};
@@ -59,15 +59,6 @@ export default function WeatherForecast(props) {
     });
 
     return groupedData;
-  }
-
-  if (error) {
-    return (
-      <div>
-        <div>Error: City not found or API request failed</div>
-        <div>{error.message}</div>
-      </div>
-    );
   }
 
   if (!loaded) {
