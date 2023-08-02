@@ -1,10 +1,11 @@
+import React from "react";
 import "./App.css";
-import Search from "./Search";
+import Search from "./Weather";
 
-function App() {
+export default function App() {
   return (
     <div className="App">
-      <header className="App-header">
+      <header className="container">
         <Search defaultCity="New York" />
         <footer>
           {" "}
@@ -23,5 +24,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
