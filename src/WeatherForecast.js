@@ -7,9 +7,11 @@ import WeatherIcon from "./WeatherIcon";
 export default function WeatherForecast(props) {
   const [loaded, setLoaded] = useState(false);
   const [dailyForecast, setDailyForecast] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setLoaded(false);
+    setError(null);
   }, [props.coordinates]);
 
   useEffect(() => {
@@ -19,12 +21,17 @@ export default function WeatherForecast(props) {
       const latitude = props.coordinates.lat;
       const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
 
-      axios.get(apiUrl).then((response) => {
-        const forecastData = response.data.list;
-        const dailyData = groupForecastByDay(forecastData);
-        setDailyForecast(dailyData);
-        setLoaded(true);
-      });
+      axios
+        .get(apiUrl)
+        .then((response) => {
+          const forecastData = response.data.list;
+          const dailyData = groupForecastByDay(forecastData);
+          setDailyForecast(dailyData);
+          setLoaded(true);
+        })
+        .catch((error) => {
+          setError(error);
+        });
     }
   }, [props.coordinates, loaded]);
 
@@ -52,6 +59,15 @@ export default function WeatherForecast(props) {
     });
 
     return groupedData;
+  }
+
+  if (error) {
+    return (
+      <div>
+        <div>Error: City not found or API request failed</div>
+        <div>{error.message}</div>
+      </div>
+    );
   }
 
   if (!loaded) {
