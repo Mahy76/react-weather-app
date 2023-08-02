@@ -2,33 +2,57 @@ import React, { useState, useEffect } from "react";
 import "./WeatherForecast.css";
 import axios from "axios";
 import WeatherForecastDay from "./WeatherForecastDay";
-import Weather from "./Weather";
+import WeatherIcon from "./WeatherIcon";
 
 export default function WeatherForecast(props) {
-  let [loaded, setLoaded] = useState(false);
-  let [forecast, setForecast] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const [dailyForecast, setDailyForecast] = useState([]);
 
   useEffect(() => {
     setLoaded(false);
   }, [props.coordinates]);
 
-  function handleResponse(response) {
-    setForecast(response.data.list);
-    setLoaded(true);
-  }
-
   useEffect(() => {
     if (props.coordinates && !loaded) {
-      let apiKey = "e41f2813890986f64c4235b2e59d0608";
-      let longitude = props.coordinates.lon;
-      let latitude = props.coordinates.lat;
-      let apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
+      const apiKey = "e41f2813890986f64c4235b2e59d0608"; // Replace with your API key
+      const longitude = props.coordinates.lon;
+      const latitude = props.coordinates.lat;
+      const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
 
       axios.get(apiUrl).then((response) => {
-        handleResponse(response);
+        const forecastData = response.data.list;
+        const dailyData = groupForecastByDay(forecastData);
+        setDailyForecast(dailyData);
+        setLoaded(true);
       });
     }
   }, [props.coordinates, loaded]);
+
+  function groupForecastByDay(forecastData) {
+    const groupedData = {};
+
+    forecastData.forEach((item) => {
+      const date = new Date(item.dt * 1000).toDateString();
+      if (!groupedData[date]) {
+        groupedData[date] = {
+          minTemp: item.main.temp,
+          maxTemp: item.main.temp,
+          data: [item],
+        };
+      } else {
+        const { minTemp, maxTemp, data } = groupedData[date];
+        if (item.main.temp < minTemp) {
+          groupedData[date].minTemp = item.main.temp;
+        }
+        if (item.main.temp > maxTemp) {
+          groupedData[date].maxTemp = item.main.temp;
+        }
+        groupedData[date].data.push(item);
+      }
+    });
+
+    return groupedData;
+  }
 
   if (!loaded) {
     return null;
@@ -37,9 +61,9 @@ export default function WeatherForecast(props) {
   return (
     <div className="WeatherForecast">
       <div className="row">
-        {forecast.slice(0, 5).map((dailyForecast, index) => (
-          <div className="col" key={index}>
-            <WeatherForecastDay data={dailyForecast} />
+        {Object.entries(dailyForecast).map(([date, data]) => (
+          <div className="col" key={date}>
+            <WeatherForecastDay data={data} />
           </div>
         ))}
       </div>
