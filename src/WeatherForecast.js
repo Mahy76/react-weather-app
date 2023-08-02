@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "./WeatherForecast.css";
 import axios from "axios";
 import WeatherForecastDay from "./WeatherForecastDay";
-
 export default function WeatherForecast(props) {
   const [loaded, setLoaded] = useState(false);
   const [dailyForecast, setDailyForecast] = useState([]);
@@ -48,7 +47,7 @@ export default function WeatherForecast(props) {
           data: [item],
         };
       } else {
-        const { minTemp, maxTemp, data } = groupedData[date];
+        const { minTemp, maxTemp } = groupedData[date];
         if (item.main.temp < minTemp) {
           groupedData[date].minTemp = item.main.temp;
         }
